@@ -1,74 +1,48 @@
-package com.kabaso.mock.week3.task4;
+package com.kabaso.mock.week7;
+
+import java.util.HashSet;
+//Write a program to check if a linked list has a cycle. 
+import java.util.Set;
 
 class Node {
 	int data;
 	Node next;
 
-	Node(int d) {
-		data = d;
-		next = null;
+	Node(int x) {
+		this.data = x;
+		this.next = null;
 	}
 }
 
-class Main {
-	Node head;
+class LinkedListCycle {
 
-	public void addToTheLast(Node node) {
-		if (head == null) {
-			head = node;
-		} else {
-			Node temp = head;
-			while (temp.next != null)
-				temp = temp.next;
-			temp.next = node;
+	static boolean detectLoop(Node head) {
+		Set<Node> st = new HashSet<>();
+
+		while (head != null) {
+			if (st.contains(head))
+				return true;
+
+			st.add(head);
+
+			head = head.next;
 		}
+		return false;
 	}
 
-	void printList() {
-		Node temp = head;
-		while (temp != null) {
-			System.out.print(temp.data + " ");
-			temp = temp.next;
-		}
-		System.out.println();
-	}
+	public static void main(String[] args) {
+		Node head = new Node(10);
+		head.next = new Node(20);
+		head.next.next = new Node(30);
+		head.next.next.next = new Node(40);
+		head.next.next.next.next = new Node(50);
+		head.next.next.next.next.next = new Node(60);
 
-	public static void main(String args[]) {
-		Main head1 = new Main();
-		Main head2 = new Main();
+		head.next.next.next.next = head;
 
-		head1.addToTheLast(new Node(1));
-		head1.addToTheLast(new Node(2));
-		head1.addToTheLast(new Node(4));
-		head1.addToTheLast(new Node(6));
-		head1.addToTheLast(new Node(9));
-
-		head2.addToTheLast(new Node(3));
-		head2.addToTheLast(new Node(4));
-		head2.addToTheLast(new Node(7));
-		head2.addToTheLast(new Node(8));
-
-		head1.head = new Mergesortedlists().MergeSortedLists(head1.head, head2.head);
-		head1.printList();
-
-	}
-}
-
-class Mergesortedlists {
-	public Node MergeSortedLists(Node head1, Node head2) {
-
-		if (head1 == null)
-			return head2;
-		if (head2 == null)
-			return head1;
-
-		if (head1.data < head2.data) {
-			head1.next = MergeSortedLists(head1.next, head2);
-			return head1;
-		} else {
-			head2.next = MergeSortedLists(head1, head2.next);
-			return head2;
-		}
-
+		if (detectLoop(head))
+			System.out.println("true");
+		else
+			System.out.println("false");
 	}
 }
