@@ -1,58 +1,55 @@
-package com.kabaso.mock.week5;
+package com.kabaso.mock.week10;
 
-class Node {
+public class BinaryTree {
 
-	int data;
-	Node left, right;
+	public static class Node {
+		int data;
+		Node left;
+		Node right;
 
-	Node(int d) {
-		data = d;
-		left = right = null;
-	}
-}
-
-class Height {
-	int height = 0;
-}
-
-class BinaryTree {
-
-	Node root;
-
-	boolean checkHeightBalance(Node root, Height height) {
-
-		if (root == null) {
-			height.height = 0;
-			return true;
+		public Node(int data) {
+			this.data = data;
+			this.left = null;
+			this.right = null;
 		}
-
-		Height leftHeighteight = new Height(), rightHeighteight = new Height();
-		boolean l = checkHeightBalance(root.left, leftHeighteight);
-		boolean r = checkHeightBalance(root.right, rightHeighteight);
-		int leftHeight = leftHeighteight.height, rightHeight = rightHeighteight.height;
-
-		height.height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
-
-		if ((leftHeight - rightHeight >= 2) || (rightHeight - leftHeight >= 2))
-			return false;
-
-		else
-			return l && r;
 	}
 
-	public static void main(String args[]) {
-		Height height = new Height();
+	public Node root;
 
-		BinaryTree tree = new BinaryTree();
-		tree.root = new Node(1);
-		tree.root.left = new Node(2);
-		tree.root.right = new Node(3);
-		tree.root.left.left = new Node(4);
-		tree.root.left.right = new Node(5);
+	public BinaryTree() {
+		root = null;
+	}
 
-		if (tree.checkHeightBalance(tree.root, height))
-			System.out.println("The tree is balanced");
-		else
-			System.out.println("The tree is not balanced");
+	public int findHeight(Node temp) {
+		if (root == null) {
+			System.out.println("Tree is empty");
+			return 0;
+		} else {
+			int leftHeight = 0, rightHeight = 0;
+
+			if (temp.left != null)
+				leftHeight = findHeight(temp.left);
+
+			if (temp.right != null)
+				rightHeight = findHeight(temp.right);
+			int max = (leftHeight > rightHeight) ? leftHeight : rightHeight;
+
+			return (max + 1);
+		}
+	}
+
+	public static void main(String[] args) {
+
+		BinaryTree bt = new BinaryTree();
+		bt.root = new Node(1);
+		bt.root.left = new Node(2);
+		bt.root.right = new Node(3);
+		bt.root.left.left = new Node(4);
+		bt.root.right.left = new Node(5);
+		bt.root.right.right = new Node(6);
+		bt.root.right.right.right = new Node(7);
+		bt.root.right.right.right.right = new Node(8);
+
+		System.out.println("Maximum height of given binary tree: " + bt.findHeight(bt.root));
 	}
 }
