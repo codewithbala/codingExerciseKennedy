@@ -1,7 +1,7 @@
-package com.kabaso.mock.week7;
+package com.kabaso.mock.week10.task2;
 
 class LongestIncreasingSubsequence {
-//Write a program to find the longest increasing subsequence (LIS) in an array.
+//Write a program to find the longest increasing subsequence in an array.
 	static int lis(int arr[], int n) {
 		int lis[] = new int[n];
 
@@ -21,7 +21,7 @@ class LongestIncreasingSubsequence {
 	}
 
 	public static void main(String args[]) {
-		int arr[] = {22, 9, 33, 21, 50, 41, 60 };
+		int arr[] = { 10, 22, 9, 33, 21, 50, 41, 60 };
 		int n = arr.length;
 		System.out.println(lis(arr, n));
 	}
