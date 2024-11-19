@@ -1,55 +1,71 @@
-package com.kabaso.mock.week10.task3;
-
+package com.kabaso.mock.week11.task2;
 public class MergeSort {
-//Write a program to implement merge sort using recursion.
-	public static void mergeSort(int[] arr) {
-		if (arr.length > 1) {
-			int mid = arr.length / 2;
+//Write a program to implement the merge sort algorithm. 
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = (left + right) / 2;
 
-			int[] left = new int[mid];
-			int[] right = new int[arr.length - mid];
-			System.arraycopy(arr, 0, left, 0, mid);
-			System.arraycopy(arr, mid, right, 0, arr.length - mid);
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
 
-			mergeSort(left);
-			mergeSort(right);
+            merge(arr, left, mid, right);
+        }
+    }
 
-			merge(arr, left, right);
-		}
-	}
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1;
+        int n2 = right - mid;
 
-	private static void merge(int[] arr, int[] left, int[] right) {
-		int i = 0, j = 0, k = 0;
+        int[] leftArr = new int[n1];
+        int[] rightArr = new int[n2];
 
-		while (i < left.length && j < right.length) {
-			if (left[i] < right[j]) {
-				arr[k++] = left[i++];
-			} else {
-				arr[k++] = right[j++];
-			}
-		}
+        for (int i = 0; i < n1; i++) {
+            leftArr[i] = arr[left + i];
+        }
+        for (int j = 0; j < n2; j++) {
+            rightArr[j] = arr[mid + 1 + j];
+        }
 
-		while (i < left.length) {
-			arr[k++] = left[i++];
-		}
-		while (j < right.length) {
-			arr[k++] = right[j++];
-		}
-	}
+        int i = 0, j = 0;
+        int k = left;
 
-	public static void main(String[] args) {
-		int[] arr = { 12, 11, 13, 5, 6, 7 };
+        while (i < n1 && j < n2) {
+            if (leftArr[i] <= rightArr[j]) {
+                arr[k] = leftArr[i];
+                i++;
+            } else {
+                arr[k] = rightArr[j];
+                j++;
+            }
+            k++;
+        }
 
-		System.out.println("Unsorted array:");
-		for (int num : arr) {
-			System.out.print(num + " ");
-		}
+        while (i < n1) {
+            arr[k] = leftArr[i];
+            i++;
+            k++;
+        }
 
-		mergeSort(arr);
+        while (j < n2) {
+            arr[k] = rightArr[j];
+            j++;
+            k++;
+        }
+    }
 
-		System.out.println("\nSorted array:");
-		for (int num : arr) {
-			System.out.print(num + " ");
-		}
-	}
+    public static void main(String[] args) {
+        int[] arr = { 12, 11, 13, 5, 6, 7 };
+
+        System.out.println("Unsorted array:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+
+        mergeSort(arr, 0, arr.length - 1);
+
+        System.out.println("\nSorted array:");
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
 }
