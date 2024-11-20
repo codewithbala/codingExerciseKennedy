@@ -1,28 +1,33 @@
-package com.kabaso.mock.week10.task2;
+package com.kabaso.mock.week11.task3;
 
-class LongestIncreasingSubsequence {
-//Write a program to find the longest increasing subsequence in an array.
-	static int lis(int arr[], int n) {
-		int lis[] = new int[n];
+import java.util.Arrays;
 
-		for (int i = 0; i < n; i++)
-			lis[i] = 1;
+public class LongestIncreasingSubsequence {
+//Write a program to find the longest increasing subsequence in an array. 
 
-		for (int i = 1; i < n; i++)
-			for (int prev = 0; prev < i; prev++)
-				if (arr[i] > arr[prev] && lis[i] < lis[prev] + 1)
-					lis[i] = lis[prev] + 1;
+	public static int lengthOfLIS(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
 
-		int max = 1;
-		for (int i = 0; i < n; i++)
-			max = Math.max(max, lis[i]);
+		int[] dp = new int[nums.length];
+		Arrays.fill(dp, 1);
+		int maxLIS = 1;
 
-		return max;
+		for (int i = 1; i < nums.length; i++) {
+			for (int j = 0; j < i; j++) {
+				if (nums[i] > nums[j]) {
+					dp[i] = Math.max(dp[i], dp[j] + 1);
+				}
+			}
+			maxLIS = Math.max(maxLIS, dp[i]);
+		}
+
+		return maxLIS;
 	}
 
-	public static void main(String args[]) {
-		int arr[] = { 10, 22, 9, 33, 21, 50, 41, 60 };
-		int n = arr.length;
-		System.out.println(lis(arr, n));
+	public static void main(String[] args) {
+		int[] nums = { 10, 9, 2, 5, 3, 7, 101, 18 };
+		System.out.println("Length of LIS: " + lengthOfLIS(nums));
 	}
 }

@@ -1,25 +1,58 @@
-package com.kabaso.mock.week10.task3;
-public class TrieNode {
-    //Write a program to implement a Trie (Prefix Tree).
-    // Array for child nodes of each node
-    TrieNode[] child;
-    
-    // Used for indicating the end of a string
-    boolean wordEnd;
+package com.kabaso.mock.week11.task3;
 
-    // Constructor
-    public TrieNode() {
-      
-        // Initialize the wordEnd 
-        // variable with false
-        wordEnd = false;
+class TrieNode {
+	// Write a program to implement a trie (prefix tree) for storing strings.
+	TrieNode[] children = new TrieNode[26];
+	boolean isEndOfWord;
 
-        // Initialize every index of 
-        // the child array with null
-        // In Java, we do not have to 
-        // explicitely assign null as 
-        // the values are by default 
-        // assigned as null 
-        child = new TrieNode[26];
-    }
+	public TrieNode() {
+		isEndOfWord = false;
+		for (int i = 0; i < 26; i++) {
+			children[i] = null;
+		}
+	}
+}
+
+class Trie {
+	private TrieNode root;
+
+	public Trie() {
+		root = new TrieNode();
+	}
+
+	public void insert(String word) {
+		TrieNode node = root;
+		for (char ch : word.toCharArray()) {
+			int index = ch - 'a';
+			if (node.children[index] == null) {
+				node.children[index] = new TrieNode();
+			}
+			node = node.children[index];
+		}
+		node.isEndOfWord = true;
+	}
+
+	public boolean search(String word) {
+		TrieNode node = root;
+		for (char ch : word.toCharArray()) {
+			int index = ch - 'a';
+			if (node.children[index] == null) {
+				return false;
+			}
+			node = node.children[index];
+		}
+		return node.isEndOfWord;
+	}
+
+	public boolean startsWith(String prefix) {
+		TrieNode node = root;
+		for (char ch : prefix.toCharArray()) {
+			int index = ch - 'a';
+			if (node.children[index] == null) {
+				return false;
+			}
+			node = node.children[index];
+		}
+		return true;
+	}
 }
