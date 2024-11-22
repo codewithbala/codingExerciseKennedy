@@ -1,81 +1,60 @@
-package com.kabaso.mock.week10.task4;
+package com.kabaso.mock.week11.task5;
 
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-class LRUCache {
-	// Write a program to implement a LRU (Least Recently Used) Cache.
+//Write a program to implement a simple cache using LRU (Least Recently Used) eviction policy.
+public class LRUCache<K, V> {
 	private final int capacity;
-	private final HashMap<Integer, Node> cache;
-	private final Node head, tail;
-
-	private static class Node {
-		int key, value;
-		Node prev, next;
-
-		Node(int key, int value) {
-			this.key = key;
-			this.value = value;
-		}
-	}
+	private final Map<K, V> cache;
 
 	public LRUCache(int capacity) {
+		if (capacity <= 0)
+			throw new IllegalArgumentException("Capacity must be greater than 0");
 		this.capacity = capacity;
-		this.cache = new HashMap<>(capacity);
-		this.head = new Node(0, 0);
-		this.tail = new Node(0, 0);
-		head.next = tail;
-		tail.prev = head;
+		this.cache = new LinkedHashMap<>(capacity, 0.75f, true);
 	}
 
-	public int get(int key) {
-		if (!cache.containsKey(key))
-			return -1;
-
-		Node node = cache.get(key);
-		remove(node);
-		insertToHead(node);
-		return node.value;
+	public V get(K key) {
+		return cache.getOrDefault(key, null);
 	}
 
-	public void put(int key, int value) {
-		if (cache.containsKey(key)) {
-			Node node = cache.get(key);
-			node.value = value;
-			remove(node);
-			insertToHead(node);
-		} else {
-			if (cache.size() == capacity) {
-				cache.remove(tail.prev.key);
-				remove(tail.prev);
-			}
-			Node newNode = new Node(key, value);
-			cache.put(key, newNode);
-			insertToHead(newNode);
+	public void put(K key, V value) {
+		if (cache.size() >= capacity) {
+			evict();
+		}
+		cache.put(key, value);
+	}
+
+	private void evict() {
+		Iterator<Map.Entry<K, V>> iterator = cache.entrySet().iterator();
+		if (iterator.hasNext()) {
+			iterator.next();
+			iterator.remove();
 		}
 	}
 
-	private void remove(Node node) {
-		node.prev.next = node.next;
-		node.next.prev = node.prev;
-	}
-
-	private void insertToHead(Node node) {
-		node.next = head.next;
-		node.prev = head;
-		head.next.prev = node;
-		head.next = node;
+	public void display() {
+		System.out.println(cache);
 	}
 
 	public static void main(String[] args) {
-		LRUCache lruCache = new LRUCache(2);
-		lruCache.put(1, 1);
-		lruCache.put(2, 2);
-		System.out.println(lruCache.get(1));
-		lruCache.put(3, 3);
-		System.out.println(lruCache.get(2));
-		lruCache.put(4, 4);
-		System.out.println(lruCache.get(1));
-		System.out.println(lruCache.get(3));
-		System.out.println(lruCache.get(4));
+		LRUCache<Integer, String> lruCache = new LRUCache<>(3);
+
+		lruCache.put(1, "One");
+		lruCache.put(2, "Two");
+		lruCache.put(3, "Three");
+
+		lruCache.display();
+
+		System.out.println("Get 1: " + lruCache.get(1));
+		lruCache.display();
+
+		lruCache.put(4, "Four");
+		lruCache.display();
+
+		lruCache.put(5, "Five");
+		lruCache.display();
 	}
 }
