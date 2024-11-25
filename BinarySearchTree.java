@@ -1,133 +1,88 @@
-package com.kabaso.mock.week11.task2;
+package com.kabaso.mock.week12.task1;
 
-public class BinarySearchTree {
+//Write a program to implement a binary search tree (BST) and perform insertion and searching.
+class BinarySearchTree {
 
-	// Write a program to implement a binary search tree with insertion and search
-	// operations.
-	public static class Node {
+	class Node {
 		int data;
-		Node left;
-		Node right;
+		Node left, right;
 
 		public Node(int data) {
 			this.data = data;
-			this.left = null;
-			this.right = null;
+			left = right = null;
 		}
 	}
 
-	public Node root;
+	private Node root;
 
 	public BinarySearchTree() {
 		root = null;
 	}
 
 	public void insert(int data) {
-		Node newNode = new Node(data);
-
-		if (root == null) {
-			root = newNode;
-			return;
-		} else {
-			Node current = root, parent = null;
-
-			while (true) {
-				parent = current;
-
-				if (data < current.data) {
-					current = current.left;
-					if (current == null) {
-						parent.left = newNode;
-						return;
-					}
-				} else {
-					current = current.right;
-					if (current == null) {
-						parent.right = newNode;
-						return;
-					}
-				}
-			}
-		}
+		root = insertRec(root, data);
 	}
 
-	public Node minNode(Node root) {
-		if (root.left != null)
-			return minNode(root.left);
-		else
+	private Node insertRec(Node root, int data) {
+		if (root == null) {
+			root = new Node(data);
 			return root;
-	}
-
-	public Node deleteNode(Node node, int value) {
-		if (node == null) {
-			return null;
-		} else {
-			if (value < node.data)
-				node.left = deleteNode(node.left, value);
-
-			else if (value > node.data)
-				node.right = deleteNode(node.right, value);
-
-			else {
-				if (node.left == null && node.right == null)
-					node = null;
-
-				else if (node.left == null) {
-					node = node.right;
-				}
-
-				else if (node.right == null) {
-					node = node.left;
-				} else {
-					Node temp = minNode(node.right);
-					node.data = temp.data;
-					node.right = deleteNode(node.right, temp.data);
-				}
-			}
-			return node;
 		}
+
+		if (data < root.data) {
+			root.left = insertRec(root.left, data);
+		} else if (data > root.data) {
+			root.right = insertRec(root.right, data);
+		}
+
+		return root;
 	}
 
-	public void inorderTraversal(Node node) {
+	public boolean search(int data) {
+		return searchRec(root, data);
+	}
 
+	private boolean searchRec(Node root, int data) {
 		if (root == null) {
-			System.out.println("Tree is empty");
-			return;
-		} else {
+			return false;
+		}
+		if (data == root.data) {
+			return true;
+		}
 
-			if (node.left != null)
-				inorderTraversal(node.left);
-			System.out.print(node.data + " ");
-			if (node.right != null)
-				inorderTraversal(node.right);
+		if (data > root.data) {
+			return searchRec(root.right, data);
+		}
 
+		return searchRec(root.left, data);
+	}
+
+	public void inorder() {
+		inorderRec(root);
+	}
+
+	private void inorderRec(Node root) {
+		if (root != null) {
+			inorderRec(root.left);
+			System.out.print(root.data + " ");
+			inorderRec(root.right);
 		}
 	}
 
 	public static void main(String[] args) {
+		BinarySearchTree bst = new BinarySearchTree();
 
-		BinarySearchTree bt = new BinarySearchTree();
-		bt.insert(50);
-		bt.insert(30);
-		bt.insert(70);
-		bt.insert(60);
-		bt.insert(10);
-		bt.insert(90);
+		bst.insert(50);
+		bst.insert(30);
+		bst.insert(20);
+		bst.insert(40);
+		bst.insert(70);
+		bst.insert(60);
+		bst.insert(80);
 
-		System.out.println("Binary search tree after insertion:");
-		bt.inorderTraversal(bt.root);
-
-		Node deletedNode = null;
-		deletedNode = bt.deleteNode(bt.root, 90);
-		System.out.println("\nBinary search tree after deleting node 90:");
-		bt.inorderTraversal(bt.root);
-
-		deletedNode = bt.deleteNode(bt.root, 30);
-		System.out.println("\nBinary search tree after deleting node 30:");
-		bt.inorderTraversal(bt.root);
-
-		deletedNode = bt.deleteNode(bt.root, 50);
-		System.out.println("\nBinary search tree after deleting node 50:");
-		bt.inorderTraversal(bt.root);
+		System.out.println("Inorder traversal of the BST:");
+		bst.inorder();
+		System.out.println("\nSearching for 40 in the BST: " + bst.search(40));
+		System.out.println("Searching for 25 in the BST: " + bst.search(25));
 	}
 }

@@ -1,75 +1,69 @@
-package com.kabaso.mock.week8;
+package com.kabaso.mock.week12.task1;
+import java.util.Arrays;
 
-import java.util.ArrayList;
-import java.util.List;
-//Write a program to implement a priority queue using a binary heap.
-class PriorityQueue {
-	static class Node {
-		String task;
-		int priority;
+//Write a program to implement the merge sort algorithm.
+class Main {
+	void merge(int array[], int p, int q, int r) {
 
-		Node(String task, int priority) {
-			this.task = task;
-			this.priority = priority;
-		}
-	}
+		int n1 = q - p + 1;
+		int n2 = r - q;
 
-	List<Node> heap = new ArrayList<>();
+		int L[] = new int[n1];
+		int M[] = new int[n2];
 
-	public void insert(String task, int priority) {
-		heap.add(new Node(task, priority));
-		int idx = heap.size() - 1;
-		while (idx != 0) {
-			int parentIdx = (idx - 1) / 2;
-			if (heap.get(parentIdx).priority < heap.get(idx).priority) {
-				swap(parentIdx, idx);
-				idx = parentIdx;
+		for (int i = 0; i < n1; i++)
+			L[i] = array[p + i];
+		for (int j = 0; j < n2; j++)
+			M[j] = array[q + 1 + j];
+
+		int i, j, k;
+		i = 0;
+		j = 0;
+		k = p;
+
+		while (i < n1 && j < n2) {
+			if (L[i] <= M[j]) {
+				array[k] = L[i];
+				i++;
 			} else {
-				break;
+				array[k] = M[j];
+				j++;
 			}
+			k++;
+		}
+
+		while (i < n1) {
+			array[k] = L[i];
+			i++;
+			k++;
+		}
+
+		while (j < n2) {
+			array[k] = M[j];
+			j++;
+			k++;
 		}
 	}
 
-	public Node extractMax() {
-		Node maxNode = heap.get(0);
-		heap.set(0, heap.get(heap.size() - 1));
-		heap.remove(heap.size() - 1);
+	void mergeSort(int array[], int left, int right) {
+		if (left < right) {
 
-		int idx = 0;
-		while (idx < heap.size()) {
-			int leftChildIdx = idx * 2 + 1;
-			int rightChildIdx = idx * 2 + 2;
-			int largerChildIdx = leftChildIdx;
+			int mid = (left + right) / 2;
 
-			if (rightChildIdx < heap.size() && heap.get(rightChildIdx).priority > heap.get(leftChildIdx).priority) {
-				largerChildIdx = rightChildIdx;
-			}
+			mergeSort(array, left, mid);
+			mergeSort(array, mid + 1, right);
 
-			if (largerChildIdx < heap.size() && heap.get(largerChildIdx).priority > heap.get(idx).priority) {
-				swap(largerChildIdx, idx);
-				idx = largerChildIdx;
-			} else {
-				break;
-			}
+			merge(array, left, mid, right);
 		}
-		return maxNode;
 	}
 
-	private void swap(int i, int j) {
-		Node temp = heap.get(i);
-		heap.set(i, heap.get(j));
-		heap.set(j, temp);
-	}
-}
+	public static void main(String args[]) {
+		int[] array = { 6, 5, 12, 10, 9, 1 };
 
-public class Main {
-	public static void main(String[] args) {
-		PriorityQueue pq = new PriorityQueue();
-		pq.insert("Task 1", 1);
-		pq.insert("Task 2", 2);
-		while (!pq.heap.isEmpty()) {
-			PriorityQueue.Node max = pq.extractMax();
-			System.out.println(max.task);
-		}
+		Main ob = new Main();
+		ob.mergeSort(array, 0, array.length - 1);
+
+		System.out.println("Sorted Array:");
+		System.out.println(Arrays.toString(array));
 	}
 }
